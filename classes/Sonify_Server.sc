@@ -13,20 +13,17 @@ Sonify_Server {
 		// initialiser l'interpréteur
 		// remplacer par:
 		// interpreter = FLSC_Interpreter().loadPackage("chemin_du_paquet_Sonify");
-		// interpreter = true;
 		interpreter = FLSC_Interpreter();
 	}
 
 	job {|formula, id, filename|
 		// rendu effectué de façon asynchrone: Function.fork
 		{
-			// TEST: attendre un temps indéterminé
-			// 12.0.rand.wait;
-			// évaluer la formule et effectuer le calback
-			// remplacer par:
-			// interpreter.read(formula.asFLSC).recordNRT(..., doneAction: doneAction)
-			// interpreter.value(formula);
+			// évaluer la formule avec le callback souhaité
 			interpreter.read(formula).recordNRT(filename,
+				// renvoyer un message précisant l'identifiant et le nom de fichier
+				// le nom de fichier pourrait suffire
+				// ou bien il pourrait être généré automatiquement
 				doneAction: {"%: %".format(id, filename).postln};
 			)
 		}.fork;
@@ -39,6 +36,7 @@ Sonify_Server {
 	free {
 		// libérer l'interpréteur
 		interpreter.free;
+		// libérer l'Object lui-même
 		^super.free;
 	}
 }
