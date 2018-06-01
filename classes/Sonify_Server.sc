@@ -10,17 +10,20 @@ Sonify_Server {
 	}
 
 	serverInit {
+		var pkgPath = Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "pkgs";
 		// initialiser l'interpréteur
-		// remplacer par:
-		// interpreter = FLSC_Interpreter().loadPackage("chemin_du_paquet_Sonify");
-		interpreter = FLSC_Interpreter();
+		interpreter = FLSC_Interpreter()
+		.loadPackage(pkgPath +/+ "masse.flscpkg")
+		.loadPackage(pkgPath +/+ "timbre.flscpkg")
+		.loadPackage(pkgPath +/+ "sonify.flscpkg");
 	}
 
 	job {|formula, id, filename|
 		// rendu effectué de façon asynchrone: Function.fork
 		{
 			// évaluer la formule avec le callback souhaité
-			interpreter.read(formula).recordNRT(filename,
+			interpreter.read(formula.asFLSC)
+			.recordNRT(filename,
 				// renvoyer un message précisant l'identifiant et le nom de fichier
 				// le nom de fichier pourrait suffire
 				// ou bien il pourrait être généré automatiquement
