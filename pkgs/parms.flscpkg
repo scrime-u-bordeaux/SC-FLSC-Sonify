@@ -1,0 +1,53 @@
+;;;; synthetiseur Sonify -- gestion des parametres
+
+;;; fonction 'env': generation d'une enveloppe
+(define (env (lambda (dates values)
+               (let* ((sel (flop (select (lambda (pair) (? (last pair))) (flop [dates values]))))
+                      (seldates (e0 sel))
+                      (selvals (e1 sel)))
+                 (sign (cdr (start seldates))
+                   (menv selvals)))))
+;;; fonctions 'lin', 'mlin': passage de [-1,1] vers [0,1]
+        (lin (lambda (x) (/ (++ x) 2)))
+        (mlin (module (sig) (/ (++ sig) 2))))
+
+;;; fonctions 'modlin', 'modexp': generation d'un modulateur
+;;; fonctions 'parmlin', 'parmexp': generation recursive d'un parametre
+(define (parmfuncs (letrec ((modlin (lambda (dates type amt freq)
+                                     (m++ (m* (parmlin dates 1 amt) (m- (mlin (type (parmexp dates 8 5 freq))) 1)))))
+                            (modexp (lambda (dates type amt freq)
+                                      (m* (parmlin dates 1 amt) (type (parmexp dates 8 5 freq)))))
+                            (parmlin (lambda (dates maxval parm)
+                                       (apply mn*
+                                         (append maxval
+                                           (if (number? (car parm))
+                                               (lin (car parm))
+                                               (mlin (env dates (car parm))))
+                                           (map (lambda (mod) (apply modlin (append dates mod)))
+                                             (cdr parm))))))
+                            (parmexp (lambda (dates baseval oct parm)
+                                       (m* baseval
+                                         (m** 2
+                                           (m* oct
+                                             (apply mn+
+                                               (append
+                                                 (if (number? (car parm))
+                                                     (car parm)
+                                                     (env dates (car parm)))
+                                                 (map (lambda (mod) (apply modexp (append dates mod)))
+                                                   (cdr parm))))))))))
+                     [parmlin parmexp])))
+
+;;; recuperation des fonctions primitives parametre
+(define (parmlin (e0 parmfuncs))
+        (parmexp (e1 parmfuncs)))
+
+;;; fonctions de types de parametres
+;; gain: un gain sur [0,1]
+;; haut: une hauteur sur 440*2^[-3,3]
+(define (gain (lambda (dates parm) (parmlin dates 1 parm)))
+        (haut (lambda (dates parm) (parmexp dates 440 3 parm)))
+        (intparm (lambda (dates maxval parm) (mround (parmlin dates maxval parm))))
+        (parmlin parmlin)
+        (parmexp parmexp))
+

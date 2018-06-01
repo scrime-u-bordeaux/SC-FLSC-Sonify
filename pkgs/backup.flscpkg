@@ -1,0 +1,20 @@
+;; compmass, version recursive
+(define (compmass (letrec ((compmass (lambda (lmass)
+                                       (if (empty? lmass)
+                                           ;; cas de base
+                                           [(lambda (n) n)
+                                            (lambda (i) i)
+                                            (lambda (i) i)
+                                            (lambda (i) 1)
+                                            (lambda (i) 1)]
+                                           ;; cas recursif
+                                           (let ((cur (car lmass))
+                                                 (rest (cdr lmass)))
+                                             ;; appliquer la fonction courante au tuple resultat
+                                               (apply
+                                                 ;; fonction courante
+                                                 (apply (car cur) (cdr cur))
+                                                 ;; tuple resultant de l'appel recursif
+                                                 (compmass rest)))))))
+                    compmass)))
+        

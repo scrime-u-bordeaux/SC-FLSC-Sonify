@@ -1,0 +1,86 @@
+;;;; synthetiseur Sonify -- fonctions de masse
+
+;;; prototype general: fonction de masse
+;;; [numfunc mass auxmass caldyn] -> [numfunc mass auxmass caldyn]
+;;; numfunc: entier -> nombre positif
+;;; mass, auxmass: nombre positif -> frequence relative
+;;; caldyn: nombre positif -> gain
+
+;;; paquetages requis
+(require "math.flscpkg")
+(require "parms.flscpkg")
+
+
+;;; fonctions de masse
+;;; red: redoublement
+(define (red (let ((mmass (module (delta i) (+ (ceil (/ i 2)) (* (/ delta 2) (** -1 (mod i 2))))))
+                   (mauxmass (module (i) (ceil (/ i 2)))))
+               (lambda (dates delta)
+                 (let ((delta (gain dates delta)))
+                   (lambda (numfunc mass auxmass caldyn)
+                     [(lambda (n) (* 2 (numfunc n)))
+                      (lambda (i) (mmass delta (mass i)))
+                      (lambda (i) (mauxmass (auxmass i)))
+                      caldyn])))))
+;;; brt: bruitage
+        (brt (let ((mmass (module (delta i) (+ i (* (/ delta 2) (rand 1 -1))))))
+              (lambda (dates delta)
+                (let ((delta (gain dates delta)))
+                  (lambda (numfunc mass auxmass caldyn)
+                    [numfunc
+                     (lambda (i) (mmass delta (mass i)))
+                     auxmass
+                     caldyn])))))
+;;; surd: surdensite
+        (surd (let* ((order (lambda (smax i) (ceil (log2 (++ (mod (-- i) (** 2 smax)))))))
+                     (delta (lambda (smax i) (* (mod (++ (* 2 (mod (-- i) (** 2 smax)))) (** 2 (order smax i))) (** 0.5 (order smax i)))))
+                     (mmass1 (module (smax i) (ceil (/ i (** 2 smax)))))
+                     (mmass2 (module (smax i) (delta smax i)))
+                     (mcaldyn (module (scur smax i) (clip (- scur (order smax i)) 0 1))))
+                (lambda (dates smax scur)
+                  (let ((!smax (intparm dates 4 smax))
+                        (scur (parmlin dates 4 scur)))
+                    (lambda (numfunc mass auxmass caldyn)
+                      [(lambda (n) (++ (* (** 2 smax) (-- n))))
+                       (lambda (i) (m+ (mass (mmass1 smax i)) (mmass2 smax i)))
+                       (lambda (i) (m+ (auxmass (mmass1 smax i)) (mmass2 smax i)))
+                       (lambda (i) (m* (caldyn i) (mcaldyn scur smax i)))])))))
+;;; cald: calibre dynamique
+        (cald (let ((mcald (module (x i) (clip (- (++ x) i) 0 1))))
+                (lambda (dates x)
+                  (let ((x (parmlin dates 24 x)))
+                    (lambda (numfunc mass auxmass caldyn)
+                      [numfunc
+                       mass
+                       auxmass
+                       (lambda (i) (m* (caldyn i) (mcald x (auxmass i))))])))))
+;;; distquad: distorsion quadratique
+        (distquad (let ((mmass (module (beta i) (** i (// (++ beta)))))
+                        (mcal (module (beta delta i) (prox delta (** i (// (++ beta)))))))
+                    (lambda (dates beta delta)
+                      (let ((!beta (parmlin dates 2 beta))
+                            (delta (parmlin dates 10 delta)))
+                        (lambda (numfunc mass auxmass caldyn)
+                          [numfunc
+                           (lambda (i) (mmass beta (mass i)))
+                           (lambda (i) (mmass beta (auxmass i)))
+                           (lambda (i) (m* (caldyn i) (mcal beta delta i)))])))))
+;;; distexp: distorsion exponentielle
+        (distexp (let ((mmass (module (beta i) (* i (** 2 (* beta i))))))
+                   (lambda (dates beta)
+                     (let ((beta (parmlin dates 0.04 beta)))
+                       (lambda (numfunc mass auxmass caldyn)
+                         [numfunc
+                          (lambda (i) (mmass beta (mass i)))
+                          auxmass
+                          caldyn])))))
+;;; decl: decalage
+        (decl (let ((mmass (module (delta i) (- i delta))))
+                (lambda (dates delta)
+                  (let ((delta (gain dates delta)))
+                    (lambda (numfunc mass auxmass caldyn)
+                      [numfunc
+                       (lambda (i) (mmass delta (mass i)))
+                       auxmass
+                       caldyn]))))))
+

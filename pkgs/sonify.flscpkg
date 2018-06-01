@@ -1,0 +1,66 @@
+;;;; synthetiseur Sonify
+
+;;; paquetage requis: interpretation des parametres
+;; pour 'gain' et 'haut'
+(require "parms.flscpkg")
+
+;;; composition des modificateurs
+;; compmass: composition des fonctions de masse
+;; liste de [fonction parm ...] -> [num mass auxmass caldyn]
+;; le resultat est un tuple de fonctions
+(define (compmass (lambda (dates lmass)
+                    (reduce (lambda (acc it) (apply (apply (car it) (append [dates] (cdr it))) acc))
+                      lmass
+                      [(lambda (n) n)
+                       (lambda (i) i)
+                       (lambda (i) i)
+                       (lambda (i) 1)]))) 
+        ;; mulfunc: produit des fonctions de timbre/couleur
+        (mulfunc (lambda (dates lfunc)
+                   ;; verifier que la liste est non-vide
+                   (if (empty? lfunc)
+                       ;; si vide, retourner la fonction unite (neutre)
+                       (lambda (freq) 1)
+                       ;; sinon
+                       ;; calculer la liste des fonctions
+                       (let ((funcs (map (lambda (func)
+                                           (apply (car func) (append [dates] (cdr func))))
+                                      lfunc)))
+                         ;; le resultat est une fonction de la frequence
+                         (lambda (freq)
+                           ;; effectuer le produit des valeurs de fonction
+                           (apply mn* (map (lambda (func) (func freq))
+                                        funcs))))))))
+
+(define (sonify (lambda (cal time dyn mel lmass lharm lcol)
+                  ;; calculer les dates, le profil dynamique, le profil melodique
+                  (let* ((dates (reduce (lambda (acc it) (add acc (+ (last acc) it))) time [0]))
+                         (amp (gain dates dyn))
+                         (!freq (haut dates mel)))
+                    ;; definir le support temporel
+                    (base [0 (last dates)]
+                      ;; construire les fonctions modificatrices
+                      (let ((fmass (compmass dates lmass))
+                            (harm (mulfunc dates lharm))
+                            (col (mulfunc dates lcol)))
+                        ;; deballer les fonctions de masse
+                        (apply (lambda (numfunc mass auxmass caldyn)
+                                 ;; produit par la dynamique (divisee par le nombre de composantes)
+                                 (m* (m/ amp (numfunc cal))
+                                   ;; iterer sur les composantes
+                                   ;; le resultat est une composition parallele
+                                   (map (lambda (i)
+                                          ;; calcul des frequences
+                                          (let* ((frel (mass i))
+                                                 (auxf (auxmass i))
+                                                 (fabs (m* freq frel)))
+                                            ;; produit par les fonctions de gain
+                                            ;; timbre, couleur, calibre dynamique
+                                            (mn* (harm auxf) (col fabs) (caldyn i)
+                                              ;; oscillateur
+                                              (mosc fabs (random 2pi)))))
+                                     ;; liste des indices
+                                     (range1 (numfunc cal)))))
+                          ;; liste des fonctions de masse
+                          fmass)))))))
+

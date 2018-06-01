@@ -1,0 +1,5 @@
+;;;; synthetiseur Sonify -- outils mathematiques
+
+;;; fonction prox
+;;; (prox delta x): proximite de x a une valeur entiere (pente delta)
+(define (prox (lambda (delta x) (max 0 (- 1 (* delta (fold x 0 0.5)))))))
