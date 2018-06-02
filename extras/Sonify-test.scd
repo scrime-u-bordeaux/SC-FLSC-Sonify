@@ -6,8 +6,9 @@ Fichier de test Sonify_Server
 // initialiser un serveur
 var server = Sonify_Server();
 // créer une formule
-var formula = Sonify_Formula(16, [0.1, 1.8, 0.1], [[-1, 0, 0, -1]], [0.1],
-	[["brt", [[-1, nil, nil, 1]]]],
+var formula = Sonify_Formula(16, [0.1, 1.9, 1.9, 0.1], [[-1, 0, nil, 0, -1]],
+	[0, ["mlfo", [[-0.9, nil, -1, nil, -1]],[0]]],
+	[["brt", [[-1, nil, nil, nil, 1]]]],
 	[["degr", [-1]]], []);
 // soumettre une requête
 // les paramètres sont:

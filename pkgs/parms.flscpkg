@@ -23,7 +23,7 @@
                                            (if (number? (car parm))
                                                (lin (car parm))
                                                (mlin (env dates (car parm))))
-                                           (map (lambda (mod) (apply modlin (append dates mod)))
+                                           (map (lambda (mod) (apply modlin (append [dates] mod)))
                                              (cdr parm))))))
                             (parmexp (lambda (dates baseval oct parm)
                                        (m* baseval
@@ -34,7 +34,7 @@
                                                  (if (number? (car parm))
                                                      (car parm)
                                                      (env dates (car parm)))
-                                                 (map (lambda (mod) (apply modexp (append dates mod)))
+                                                 (map (lambda (mod) (apply modexp (debug (append [dates] mod))))
                                                    (cdr parm))))))))))
                      [parmlin parmexp])))
 
