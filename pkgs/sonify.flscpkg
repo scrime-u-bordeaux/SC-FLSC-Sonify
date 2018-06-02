@@ -41,7 +41,7 @@
                     (base [0 (last dates)]
                       ;; construire les fonctions modificatrices
                       (let ((fmass (compmass dates lmass))
-                            (harm (mulfunc dates lharm))
+                            (harm (mulfunc dates (append [[degr [1]]] lharm)))
                             (col (mulfunc dates lcol)))
                         ;; deballer les fonctions de masse
                         (apply (lambda (numfunc mass auxmass caldyn)

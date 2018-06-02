@@ -19,8 +19,8 @@
                 (lambda (dates delta) (lambda (x) (mcomb (parmlin dates 10 delta) x)))))
 ;;; degr: degressivite
 ;;; ordre de degressivite -> fonction timbre
-        (degr (let ((mdegr (module (slp x) (** x (neg (++ slp))))))
-                (lambda (dates slp) (lambda (x) (mdegr (parmlin dates 3 slp) x)))))
+        (degr (let ((mdegr (module (slp x) (** x (neg slp)))))
+                (lambda (dates slp) (lambda (x) (mdegr (gain dates slp) x)))))
 ;;; dom: dominance
 ;;; gain, limite -> fonction timbre
         (dom (let ((mdom (module (alpha x0 x) (** alpha (clip (- (++ x0) x) 0 1)))))
