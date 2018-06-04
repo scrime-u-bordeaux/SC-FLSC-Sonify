@@ -34,7 +34,7 @@
                                                  (if (number? (car parm))
                                                      (car parm)
                                                      (env dates (car parm)))
-                                                 (map (lambda (mod) (apply modexp (debug (append [dates] mod))))
+                                                 (map (lambda (mod) (apply modexp (append [dates] mod)))
                                                    (cdr parm))))))))))
                      [parmlin parmexp])))
 
