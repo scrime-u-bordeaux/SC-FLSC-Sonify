@@ -18,7 +18,7 @@ Sonify_Server {
 		.loadPackage(pkgPath +/+ "sonify.flscpkg");
 	}
 
-	job {|formula, id, filename|
+	job {|formula, filename, doneAction|
 		// rendu effectué de façon asynchrone: Function.fork
 		{
 			// évaluer la formule avec le callback souhaité
@@ -27,7 +27,7 @@ Sonify_Server {
 				// renvoyer un message précisant l'identifiant et le nom de fichier
 				// le nom de fichier pourrait suffire
 				// ou bien il pourrait être généré automatiquement
-				doneAction: {"%: %".format(id, filename).postln};
+				doneAction: doneAction;
 			)
 		}.fork;
 		// se retourne lui-même (implicitement):
