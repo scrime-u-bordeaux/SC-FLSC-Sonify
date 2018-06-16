@@ -18,22 +18,26 @@
                             (modexp (lambda (dates type amt freq)
                                       (m* (parmlin dates 1 amt) (type (parmexp dates 8 5 freq)))))
                             (parmlin (lambda (dates maxval parm)
-                                       (apply mn*
-                                         (append maxval
-                                           (if (number? (car parm))
-                                               (lin (car parm))
-                                               (mlin (env dates (car parm))))
-                                           (map (lambda (mod) (apply modlin (append [dates] mod)))
-                                             (cdr parm))))))
+                                       (if (? (car parm))
+                                           (apply mn*
+                                             (append maxval
+                                               (if (number? (car parm))
+                                                   (lin (car parm))
+                                                   (mlin (env dates (car parm))))
+                                               (map (lambda (mod) (apply modlin (append [dates] mod)))
+                                                 (cdr parm))))
+                                           0)))
                             (parmexp (lambda (dates baseval oct parm)
                                        (m* baseval
                                          (m** 2
                                            (m* oct
                                              (apply mn+
                                                (append
-                                                 (if (number? (car parm))
-                                                     (car parm)
-                                                     (env dates (car parm)))
+                                                 (if (? (car parm))
+                                                     (if (number? (car parm))
+                                                         (car parm)
+                                                         (env dates (car parm)))
+                                                     0)
                                                  (map (lambda (mod) (apply modexp (append [dates] mod)))
                                                    (cdr parm))))))))))
                      [parmlin parmexp])))
