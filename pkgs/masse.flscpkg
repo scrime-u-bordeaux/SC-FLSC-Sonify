@@ -36,7 +36,7 @@
                      (delta (lambda (smax i) (* (mod (++ (* 2 (mod (-- i) (** 2 smax)))) (** 2 (order smax i))) (** 0.5 (order smax i)))))
                      (mmass1 (module (smax i) (ceil (/ i (** 2 smax)))))
                      (mmass2 (module (smax i) (delta smax i)))
-                     (mcaldyn (module (scur smax i) (clip (- scur (order smax i)) 0 1))))
+                     (mcaldyn (module (scur smax i) (clip (- (++ scur) (order smax i)) 0 1))))
                 (lambda (dates smax scur)
                   (let ((scur (parmlin dates smax scur)))
                     (lambda (numfunc mass auxmass caldyn)
