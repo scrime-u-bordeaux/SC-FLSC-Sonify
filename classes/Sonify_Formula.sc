@@ -51,7 +51,7 @@ Sonify_Formula {
 	}
 
 	// retourne la chaîne FLSC associée
-	asFLSC {
+	asString {
 		// calibre
 		^"(sonify %".format(cal) +
 		// temps

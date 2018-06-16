@@ -22,7 +22,7 @@ Sonify_Server {
 		// rendu effectué de façon asynchrone: Function.fork
 		{
 			// évaluer la formule avec le callback souhaité
-			interpreter.read(formula.asFLSC)
+			interpreter.read(formula.asString)
 			.recordNRT(filename,
 				// renvoyer un message précisant l'identifiant et le nom de fichier
 				// le nom de fichier pourrait suffire
