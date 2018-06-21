@@ -11,7 +11,7 @@
 
 ;;; bharm: bruitage harmonique (d'amplitude)
 ;;; indice de bruitage -> fonction timbre
-(define (bharm (let ((mbharm (module (alpha) (- 1 (* alpha (crand))))))
+(define (bharm (let ((mbharm (module (alpha) (- 1 (* alpha (crand 1 -1))))))
                  (lambda (dates alpha) (lambda (x) (mbharm (gain dates alpha))))))
 ;;; comb: filtre en peigne
 ;;; proximite -> fonction timbre
