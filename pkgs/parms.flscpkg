@@ -14,7 +14,7 @@
 ;;; fonctions 'modlin', 'modexp': generation d'un modulateur
 ;;; fonctions 'parmlin', 'parmexp': generation recursive d'un parametre
 (define (parmfuncs (letrec ((modlin (lambda (dates type amt freq)
-                                     (m++ (m* (parmlin dates 1 amt) (m- (mlin (type (parmexp dates 8 5 freq))) 1)))))
+                                      (m++ (m* (parmlin dates 1 amt) (m- (mlin (type (parmexp dates 8 5 freq))) 1)))))
                             (modexp (lambda (dates type amt freq)
                                       (m* (parmlin dates 1 amt) (type (parmexp dates 8 5 freq)))))
                             (parmlin (lambda (dates maxval parm)
