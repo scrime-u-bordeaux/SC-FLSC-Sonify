@@ -24,13 +24,13 @@
                       caldyn])))))
 ;;; brt: bruitage
         (brt (let ((mmass (module (delta i) (+ i (* delta (rand 1 -1))))))
-              (lambda (dates delta)
-                (let ((delta (gain dates delta)))
-                  (lambda (numfunc mass auxmass caldyn)
-                    [numfunc
-                     (lambda (i) (mmass delta (mass i)))
-                     auxmass
-                     caldyn])))))
+               (lambda (dates delta)
+                 (let ((delta (gain dates delta)))
+                   (lambda (numfunc mass auxmass caldyn)
+                     [numfunc
+                      (lambda (i) (mmass delta (mass i)))
+                      auxmass
+                      caldyn])))))
 ;;; surd: surdensite
         (surd (let* ((order (lambda (smax i) (ceil (log2 (++ (mod (-- i) (** 2 smax)))))))
                      (delta (lambda (smax i) (* (mod (++ (* 2 (mod (-- i) (** 2 smax)))) (** 2 (order smax i))) (** 0.5 (order smax i)))))
