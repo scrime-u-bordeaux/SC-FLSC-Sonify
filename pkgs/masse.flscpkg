@@ -57,6 +57,7 @@
                        auxmass
                        (lambda (i) (m* (caldyn i) (mcald x (auxmass i))))])))))
 ;;; distquad: distorsion quadratique
+;;; distquad2: distorsion quadratique (sans delta)
         (distquad (let ((mmass (module (beta i) (** i (// (++ beta)))))
                         (mcal (module (beta delta i) (prox delta (** i (// (++ beta)))))))
                     (lambda (dates beta delta)
@@ -67,6 +68,14 @@
                            (lambda (i) (mmass beta (mass i)))
                            (lambda (i) (mmass beta (auxmass i)))
                            (lambda (i) (m* (caldyn i) (mcal beta delta i)))])))))
+        (distquad2 (let ((mmass (module (beta i) (** i (// (++ beta))))))
+                     (lambda (dates beta)
+                       (let ((!beta (parmlin dates 2 beta)))
+                         (lambda (numfunc mass auxmass caldyn)
+                           [numfunc
+                            (lambda (i) (mmass beta (mass i)))
+                            (lambda (i) (mmass beta (auxmass i)))
+                            caldyn])))))
 ;;; distexp: distorsion exponentielle
         (distexp (let ((mmass (module (beta i) (* i (** 2 (* beta i))))))
                    (lambda (dates beta)
