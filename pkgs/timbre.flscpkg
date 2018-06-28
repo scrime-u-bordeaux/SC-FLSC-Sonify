@@ -48,5 +48,5 @@
 ;;; fonction de couleur
 ;;; gain, freq_basse, freq_haute -> fonction (frequence -> gain)
         (col (let ((mcol (module (alpha f0 f1 f) (** alpha (clip (/ (- (* 2 f) (+ f1 f0)) (- f1 f0)) -1 1)))))
-               (lambda (dates alpha f0 f1) (lambda (f) (mcol (parmexp dates 1 3 alpha) (haut dates f0) (haut dates f1) f))))))
+               (lambda (dates alpha f0 f1) (lambda (f) (mcol (parmexp dates 1 1 alpha) (haut dates f0) (haut dates f1) f))))))
 
