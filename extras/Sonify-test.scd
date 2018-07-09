@@ -6,10 +6,21 @@ Fichier de test Sonify_Server
 // initialiser un serveur
 var server = Sonify_Server();
 // créer une formule
-var formula = Sonify_Formula(16, [0.1, 1.9, 1.9, 0.1], [[-1, 0, nil, 0, -1]],
-	[0, ["mlfo", [[-0.9, nil, -1, nil, -1]],[0]]],
-	[["brt", [[-1, nil, nil, nil, 1]]]],
-	/*[["degr", [-1]]]*/[], []);
+var formula = Sonify_Formula(
+	Sonify_Calibre(16),
+	Sonify_Time([0.1,1]),
+	Sonify_Parm([-1,1,-1]),
+	Sonify_Parm(0),
+	[
+		Sonify_Func(\distquad2, [Sonify_Parm(0)])
+	],
+	[
+		Sonify_Func(\pcyc2, [Sonify_Parm(-1)])
+	],
+	[
+		Sonify_Func(\col, [Sonify_Parm(-1),Sonify_Parm(0),Sonify_Parm(0.4)])
+	]
+);
 // créer une adresse pour le callback
 var address = NetAddr("localhost", 7777);
 // soumettre une requête
@@ -22,6 +33,21 @@ server.job(formula, Platform.userExtensionDir +/+
 	"SC-FLSC-Sonify/recordings/test.WAV",
 	{ address.sendMsg("/recordingdone", "test.WAV") }
 );
+)
+
+// créer une formule et l'afficher
+(
+Sonify_Formula(
+	Sonify_Calibre(16),
+	Sonify_Time([0.1,1]),
+	Sonify_Parm([-1,1,-1]),
+	Sonify_Parm(0),
+	[
+		Sonify_Func(\distquad2, [Sonify_Parm(0)])
+	],
+	[],
+	[]
+).asString;
 )
 
 // créer un recepteur OSC
