@@ -12,7 +12,8 @@ var formula = Sonify_Formula(
 	Sonify_Parm([-1,1,-1]),
 	Sonify_Parm(0),
 	[
-		Sonify_Func(\distquad2, [Sonify_Parm(0)])
+		Sonify_Func(\distquad2, [Sonify_Parm(0,
+			[Sonify_Func(\mlfo, [Sonify_Parm(1),Sonify_Parm(0)])])])
 	],
 	[
 		Sonify_Func(\pcyc2, [Sonify_Parm(-1)])
