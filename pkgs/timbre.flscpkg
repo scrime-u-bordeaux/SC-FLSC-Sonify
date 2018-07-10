@@ -24,7 +24,7 @@
 ;;; dom: dominance
 ;;; gain, limite -> fonction timbre
         (dom (let ((mdom (module (alpha x0 x) (** alpha (clip (- (++ x0) x) 0 1)))))
-               (lambda (dates alpha x0) (lambda (x) (mdom (parmexp dates 4 2 alpha) (parmlin dates 8 x0) x)))))
+               (lambda (dates alpha x0) (lambda (x) (mdom (parmexp dates 8 3 alpha) (parmlin dates 8 x0) x)))))
 ;;; presence cyclique de raison 2,3,4
 ;;; gain, ... -> fonction timbre
         (pcyc2 (let ((mpcyc (module (a2 x) (+ (prox 2 (/ (- x 1) 2)) (* a2 (prox 2 (/ (- x 2) 2)))))))
@@ -48,5 +48,7 @@
 ;;; fonction de couleur
 ;;; gain, freq_basse, freq_haute -> fonction (frequence -> gain)
         (col (let ((mcol (module (alpha f0 f1 f) (** alpha (clip (/ (- (* 2 f) (+ f1 f0)) (- f1 f0)) -1 1)))))
-               (lambda (dates alpha f0 f1) (lambda (f) (mcol (parmexp dates 1 1 alpha) (haut dates f0) (haut dates f1) f))))))
+               (lambda (dates alpha f0 f1) (lambda (f) (mcol (parmexp dates 1 1 alpha)
+                                                         (parmexp dates 880 4 f0)
+                                                         (parmexp dates 880 4 f1) f))))))
 

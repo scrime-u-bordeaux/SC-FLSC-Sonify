@@ -19,7 +19,7 @@ var formula = Sonify_Formula(
 		Sonify_Func(\pcyc2, [Sonify_Parm(-1)])
 	],
 	[
-		Sonify_Func(\col, [Sonify_Parm(-1),Sonify_Parm(0),Sonify_Parm(0.4)])
+		Sonify_Func(\col, [Sonify_Parm(-1),Sonify_Parm(-0.2),Sonify_Parm(0.2)])
 	]
 );
 // créer une adresse pour le callback
