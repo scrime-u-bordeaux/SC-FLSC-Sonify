@@ -23,8 +23,8 @@
                 (lambda (dates slp) (lambda (x) (mdegr (gain dates slp) x)))))
 ;;; dom: dominance
 ;;; gain, limite -> fonction timbre
-        (dom (let ((mdom (module (alpha x0 x) (** alpha (clip (- (++ x0) x) 0 1)))))
-               (lambda (dates alpha x0) (lambda (x) (mdom (parmexp dates 8 3 alpha) (parmlin dates 8 x0) x)))))
+        (dom (let ((mdom (module (alpha x0 x) (** alpha (clip (- x0 x) -1 1)))))
+               (lambda (dates alpha x0) (lambda (x) (mdom (parmexp dates 2.82842712 1.5 alpha) (parmlin dates 8 x0) x)))))
 ;;; presence cyclique de raison 2,3,4
 ;;; gain, ... -> fonction timbre
         (pcyc2 (let ((mpcyc (module (a2 x) (+ (prox 2 (/ (- x 1) 2)) (* a2 (prox 2 (/ (- x 2) 2)))))))
