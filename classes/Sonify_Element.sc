@@ -1,17 +1,20 @@
 Sonify_Element {
-	var <nbTimes;
+	var <>nbTimes;
 	var parent;
 
 	// interface graphique
 	var view, controls;
 
-	*new {|parent, nbTimes|
-		^super.new.elementInit(parent, nbTimes);
-	}
+	// *new {
+	// 	^super.new.elementInit();
+	// }
 
-	elementInit {|par, num|
+	// elementInit {||
+	// }
+
+	setParent {|par|
 		parent = par;
-		nbTimes = num ?? {parent.nbTimes};
+		nbTimes = parent.nbTimes;
 	}
 
 	insertTime {
@@ -22,8 +25,8 @@ Sonify_Element {
 		nbTimes = nbTimes - 1;
 	}
 
-	makeView {|treeItem|
-		view = treeItem;
-		this.makeControls;
-	}
+	// makeView {|treeItem|
+	// 	view = treeItem;
+	// 	this.makeControls;
+	// }
 }

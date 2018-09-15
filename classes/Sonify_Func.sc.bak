@@ -1,0 +1,82 @@
+Sonify_Func : Sonify_RecElt {
+	classvar <funcDefs, massOrder;
+
+	var selector, type, <order;
+	// paramètres (défini dans RecElt)
+	// var subs;
+
+	*initClass {
+		funcDefs = Dictionary.newFrom([
+			// fonction par défaut
+			none: [nil, 0],
+			// fonctions de masse
+			red: ['mass',1],
+			brt: ['mass',1],
+			surd1: ['mass',1],
+			surd2: ['mass',1],
+			surd3: ['mass',1],
+			cald: ['mass',1],
+			distquad: ['mass',2],
+			distquad2: ['mass',1],
+			distexp: ['mass',1],
+			decl: ['mass',1],
+			// fonctions de timbre
+			bharm: ['harm',1],
+			comb: ['harm',1],
+			degr: ['harm',1],
+			dom: ['harm',2],
+			pcyc2: ['harm',1],
+			pcyc3: ['harm',2],
+			pcyc4: ['harm',3],
+			plog1: ['harm',1],
+			plog3: ['harm',2],
+			// fonction de couleur
+			col: ['col',3],
+			// modulateurs
+			mlfo: ['mod',2],
+			mtri: ['mod',2],
+			msqu: ['mod',2]
+		]);
+
+		massOrder = Dictionary.newFrom([
+			red: 1,
+			brt: 2,
+			surd1: 3,
+			surd2: 3,
+			surd3: 3,
+			cald: 4,
+			distquad: 5,
+			distquad2: 5,
+			distexp: 6,
+			decl: 7
+		]);
+	}
+
+	*new {|type, sel, parms = #[]|
+		^super.new.funcInit(type, sel, parms);
+	}
+
+	*default {|type|
+		^this.new(type, \none, []);
+	}
+
+	funcInit {|sel, prms|
+		var nbParms;
+		// vérifier que la fonction existe
+		if (funcDefs[sel].isNil)
+		{ Error("Function % does not exist.".format(sel)).throw };
+		# type, nbParms = funcDefs[sel];
+		// vérifier que le nombre de paramètres est correct
+		if (nbParms != prms.size)
+		{ Error("Function %: wrong number of parameters".format(sel)).throw };
+		selector = sel;
+		subs = prms;
+		order = massOrder[sel];
+	}
+
+	asString {
+		if (selector == \none)
+		{ Error("Uninitialized function.").throw };
+		^"[% %]".format(selector.asString, subs.collect(_.asString).reduce('+'));
+	}
+}
