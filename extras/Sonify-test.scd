@@ -59,3 +59,47 @@ o = OSCFunc({|msg, time, addr, recvPort| "Done: %".format(msg.postln)},
 
 // libérer le recepteur OSC
 o.free;
+
+// synthétiser des formules aléatoires
+(
+// racine de génération aléatoire
+var seed = 13;
+// paramètres
+var times = ((2..5) ! 15).reduce('++').asBag;
+var mfuncs = Sonify_Func.orderedArray((Sonify_Func.funcDefs['mass'].keys.asArray ! 3).reduce('++'));
+var hfuncs = (Sonify_Func.funcDefs['harm'].keys.asArray ! 3).reduce('++').asBag;
+var ncol = 30;
+var mods = (Sonify_Func.funcDefs['mod'].keys.asArray ! 10).reduce('++').asBag;
+// variables utilisées
+var formulas, outFile, server = Sonify_Server();
+var job, size, done = true;
+
+// initialiser le générateur aléatoire
+thisThread.randSeed = seed;
+// générer les formules
+formulas = Sonify_Formula.randGen(times, mfuncs, hfuncs, ncol, mods);
+size = formulas.size;
+
+// écrire les formules dans un fichier
+outFile = File.open(Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "src" +/+
+	"random_%.txt".format(seed), "w");
+formulas.do {|f| outFile.write("%\n".format(f))};
+outFile.close;
+
+// synthétiser les formules
+job = {|i|
+	done = false;
+	server.job(formulas[i],
+		Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "recordings" +/+
+		"random_%".format(seed) +/+ "snd%.wav".format(i.asString.padLeft(3,"0")),
+		{"DONE: %".format(i).postln; done = true})
+};
+
+{
+	size.do {|n|
+		job.(n);
+		while {done.not} {1.wait};
+	};
+	server.free;
+}.fork;
+)

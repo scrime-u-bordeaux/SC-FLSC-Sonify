@@ -7,6 +7,21 @@ Sonify_Dyn : Sonify_Parm {
 		^this.new([-1,1,-1], []);
 	}
 
+	*randGen {|time, mods|
+		var mid = rand(time-1);
+		^this.new(
+			// [-1] ++ ({rand(2.0)-1}!(time-1)) ++ [-1],
+			[-1] ++
+			({rand(2.0)-1}!mid) ++
+			[1] ++
+			({rand(2.0)-1}!(time-mid-2)) ++
+			[-1],
+			mods.collect {|mod|
+				Sonify_Func.randGen(time, 'mod', mod, [])
+			}
+		);
+	}
+
 	// makeControls {
 	// 	if (controls.notNil) { controls.destroy };
 	// 	controls = HLayoutView(nil);

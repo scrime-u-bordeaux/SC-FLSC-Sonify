@@ -1,22 +1,8 @@
 Sonify_LFunc : Sonify_AddElt {
-	// types de fonction
-	// classvar funcTypes;
-
 	// type de la liste
 	var type;
 	// liste de fonctions (défini dans RecElt)
 	// var subs;
-
-	// *initClass {
-	// 	Class.initClassTree(Sonify_Func);
-	// 	funcTypes = Dictionary(3);
-	// 	['mass', 'harm', 'col'].do {|type|
-	// 		funcTypes.add(type ->
-	// 			Sonify_Func.funcDefs.select {|def| def.first == type}.keys
-	// 			.asArray.sort {|a,b| a.asString < b.asString}
-	// 		)
-	// 	};
-	// }
 
 	*new {|type, funcList = #[]|
 		^super.new(funcList)/*.lFuncInit()*/;
@@ -24,6 +10,17 @@ Sonify_LFunc : Sonify_AddElt {
 
 	// lFuncInit {|fList|
 	// }
+
+	*randGen {|time, type, flist, mods|
+		var size = flist.size;
+		var mdspl = {List()} ! size;
+		mods.do {|mod| mdspl[rand(size)].add(mod)};
+		^this.new(type,
+			flist.collectAs({|func, i|
+				Sonify_Func.randGen(time, type, func, mdspl[i])
+			}, Array)
+		);
+	}
 
 	add {|func|
 		subs.add(func ? Sonify_Func.default(type));

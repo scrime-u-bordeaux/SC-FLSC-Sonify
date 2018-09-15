@@ -1,6 +1,7 @@
 Sonify_Parm : Sonify_AddElt {
 	var level;
-	// modulateurs (défini dans RecElt)
+	// modulateurs (défini dans RecElt)				[rand(2.0)] ++
+
 	// var subs;
 
 	*new {|lvl = -1, mods = #[]|
@@ -13,6 +14,26 @@ Sonify_Parm : Sonify_AddElt {
 
 	parmInit {|lvl|
 		level = lvl;
+	}
+
+	*randGen {|time, mods|
+		^this.new(
+			switch (((rand(1.0)**3)*3).floor.asInteger)
+			{0} {rand(2.0) - 1}
+			{1} {[rand(2.0)-1] ++ (nil!(time-1)) ++ [rand(2.0)-1]}
+			{2}
+			{
+				var mid = rand(time-1);
+				[rand(2.0)-1] ++
+				(nil!mid) ++
+				[rand(2.0)-1] ++
+				(nil!(time-mid-2)) ++
+				[rand(2.0)-1]
+			},
+			mods.collect {|mod|
+				Sonify_Func.randGen(time, 'mod', mod, [])
+			}
+		);
 	}
 
 	add {|mod|

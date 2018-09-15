@@ -14,6 +14,10 @@ Sonify_Time : Sonify_Element {
 		nbTimes = times.size;
 	}
 
+	*randGen {|time|
+		^this.new({(rand(20.0)**2)*0.01} ! time);
+	}
+
 	setParent {|par|
 		parent = par;
 		parent.nbTimes = nbTimes;

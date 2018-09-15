@@ -9,7 +9,7 @@ Sonify_Func : Sonify_RecElt {
 		funcDefs = Dictionary.newFrom([
 			// fonctions de masse
 			mass: Dictionary.newFrom([
-				none: 0,
+				// none: 0,
 				red: 1,
 				brt: 1,
 				surd1: 1,
@@ -23,7 +23,7 @@ Sonify_Func : Sonify_RecElt {
 			]),
 			// fonctions de timbre
 			harm: Dictionary.newFrom([
-				none: 0,
+				// none: 0,
 				bharm: 1,
 				comb: 1,
 				degr: 1,
@@ -40,7 +40,7 @@ Sonify_Func : Sonify_RecElt {
 			]),
 			// modulateurs
 			mod: Dictionary.newFrom([
-				none: 0,
+				// none: 0,
 				mlfo: 2,
 				mtri: 2,
 				msqu: 2
@@ -81,6 +81,7 @@ Sonify_Func : Sonify_RecElt {
 		if (tp == 'col') {sel = 'col'};
 
 		nbParms = defs[sel];
+		if (sel == 'none') {nbParms = 0};
 		// vérifier que la fonction existe
 		if (nbParms.isNil)
 		{ Error("Function % does not exist.".format(sel)).throw };
@@ -101,6 +102,19 @@ Sonify_Func : Sonify_RecElt {
 		selector = sel;
 		subs = prms;
 		order = massOrder[selector];
+	}
+
+	*randGen {|time, type, sel, mods|
+		var nbParms = funcDefs[type][sel];
+		var mdspl = {List()} ! nbParms;
+		mods.do {|mod| mdspl[rand(nbParms)].add(mod)};
+		^this.new(type, sel, {|i| Sonify_Parm.randGen(time, mdspl[i])} ! nbParms);
+	}
+
+	*orderedArray {|mfuncs|
+		var res = {Bag()} ! 7;
+		mfuncs.do {|func| res[massOrder[func]-1].add(func)};
+		^res;
 	}
 
 	asString {

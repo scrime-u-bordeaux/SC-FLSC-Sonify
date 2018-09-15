@@ -13,6 +13,10 @@ Sonify_Calibre : Sonify_Element {
 		num = n;
 	}
 
+	*randGen {
+		^this.new(rand(5)*4+8);
+	}
+
 	// makeControls {
 	// 	controls = Slider(nil, Rect(0,0,256,32))
 	// 	.value_((num-8)/16)
