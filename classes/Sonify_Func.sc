@@ -1,10 +1,12 @@
-Sonify_Func {
+Sonify_Func : Sonify_Element {
 	classvar funcParms, massOrder;
 
 	var selector, parms, <order;
 
 	*initClass {
 		funcParms = Dictionary.newFrom([
+			// fonction par défaut
+			none: 0,
 			// fonctions de masse
 			red: 1,
 			brt: 1,
@@ -48,8 +50,12 @@ Sonify_Func {
 		]);
 	}
 
-	*new {|sel, parms = #[]|
-		^super.new.funcInit(sel, parms);
+	*new {|sel, parms = #[], parent|
+		^super.new(parent).funcInit(sel, parms);
+	}
+
+	*default {|parent|
+		^this.new(\none, [], parent);
 	}
 
 	funcInit {|sel, prms|
@@ -64,11 +70,19 @@ Sonify_Func {
 		order = massOrder[sel];
 	}
 
+	insertTime {|index|
+		super.insertTime;
+		parms.do(_.insertTime(index));
+	}
+
+	removeTime {|index|
+		super.removeTime;
+		parms.do(_.removeTime(index));
+	}
+
 	asString {
-		// if (selector != 'col') {
+		if (selector == \none)
+		{ Error("Uninitialized function.").throw };
 		^"[% %]".format(selector.asString, parms.collect(_.asString).reduce('+'));
-		// } {
-		// 	^"[%]".format(parms.collect(_.asString).reduce('+'));
-		// };
 	}
 }
