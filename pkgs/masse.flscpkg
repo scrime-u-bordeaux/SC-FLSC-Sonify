@@ -48,7 +48,7 @@
         (surd2 (lambda (dates scur) (surd dates 2 scur)))
         (surd3 (lambda (dates scur) (surd dates 3 scur)))
 ;;; cald: calibre dynamique
-        (cald (let ((mcald (module (x i) (clip (- (++ x) i) 0 1))))
+        (cald (let ((mcald (module (x i) (clip (- 25 x i) 0 1))))
                 (lambda (dates x)
                   (let ((x (parmlin dates 24 x)))
                     (lambda (numfunc mass auxmass caldyn)
