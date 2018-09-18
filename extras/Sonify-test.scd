@@ -63,43 +63,57 @@ o.free;
 // synthétiser des formules aléatoires
 (
 // racine de génération aléatoire
-var seed = 911;
+// var seeds = [6, 13, 42, 27, 51, 421, 667, 1111];
+var seeds = [669, 1111];
 // paramètres
-var times = ((2..5) ! 15).reduce('++').asBag;
-var mfuncs = Sonify_Func.orderedArray((Sonify_Func.funcDefs['mass'].keys.asArray ! 3).reduce('++'));
-var hfuncs = (Sonify_Func.funcDefs['harm'].keys.asArray ! 3).reduce('++').asBag;
-var ncol = 30;
-var mods = (Sonify_Func.funcDefs['mod'].keys.asArray ! 10).reduce('++').asBag;
+var times, mfuncs, hfuncs, ncol, mods;
+// var times = ((2..5) ! 15).reduce('++').asBag;
+// var mfuncs = Sonify_Func.orderedArray((Sonify_Func.funcDefs['mass'].keys.asArray ! 3).reduce('++'));
+// var hfuncs = (Sonify_Func.funcDefs['harm'].keys.asArray ! 3).reduce('++').asBag;
+// var ncol = 30;
+// var mods = (Sonify_Func.funcDefs['mod'].keys.asArray ! 10).reduce('++').asBag;
 // variables utilisées
 var formulas, outFile, server = Sonify_Server();
 var job, size, done = true;
 
-// initialiser le générateur aléatoire
-thisThread.randSeed = seed;
-// générer les formules
-formulas = Sonify_Formula.randGen(times, mfuncs, hfuncs, ncol, mods);
-size = formulas.size;
-
-// écrire les formules dans un fichier
-outFile = File.open(Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "src" +/+
-	"random_%.txt".format(seed), "w");
-formulas.do {|f| outFile.write("%\n".format(f))};
-outFile.close;
-
-// synthétiser les formules
-job = {|i|
-	done = false;
-	server.job(formulas[i],
-		Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "recordings" +/+
-		"random_%".format(seed) +/+ "snd%.wav".format((i+1).asString.padLeft(3,"0")),
-		{"DONE: %".format(i+1).postln; done = true})
-};
-
 {
-	size.do {|n|
-		job.(n);
-		while {done.not} {1.wait};
+	seeds.do {|seed|
+		"SEED: %".format(seed).postln;
+		// initialiser les paramètres
+		times = ((2..5) ! 4).reduce('++').asBag;
+		mfuncs = Sonify_Func.orderedArray(Sonify_Func.funcDefs['mass'].keys.asArray);
+		hfuncs = Sonify_Func.funcDefs['harm'].keys.asBag;
+		ncol = 10;
+		mods = (Sonify_Func.funcDefs['mod'].keys.asArray ! 3).reduce('++').asBag;
+		// initialiser le générateur aléatoire
+		thisThread.randSeed = seed;
+		// générer les formules
+		formulas = Sonify_Formula.randGen(times, mfuncs, hfuncs, ncol, mods);
+		size = formulas.size;
+
+		// écrire les formules dans un fichier
+		outFile = File.open(Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "src" +/+
+			"random_%.txt".format(seed), "w");
+		formulas.do {|f| outFile.write("%\n".format(f))};
+		outFile.close;
+
+		// synthétiser les formules
+		job = {|i|
+			done = false;
+			server.job(formulas[i],
+				Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "recordings" +/+
+				"random_%".format(seed) +/+ "snd%.wav".format((i+1).asString.padLeft(3,"0")),
+				{"DONE: %".format(i+1).postln; done = true})
+		};
+
+		size.do {|n|
+			job.(n);
+			while {done.not} {1.wait};
+		};
+
+		"FINISHED SEED %".format(seed).postln;
 	};
+
 	server.free;
 }.fork;
 )
