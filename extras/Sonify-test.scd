@@ -63,7 +63,7 @@ o.free;
 // synthétiser des formules aléatoires
 (
 // racine de génération aléatoire
-var seed = 13;
+var seed = 667;
 // paramètres
 var times = ((2..5) ! 15).reduce('++').asBag;
 var mfuncs = Sonify_Func.orderedArray((Sonify_Func.funcDefs['mass'].keys.asArray ! 3).reduce('++'));
@@ -91,8 +91,8 @@ job = {|i|
 	done = false;
 	server.job(formulas[i],
 		Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "recordings" +/+
-		"random_%".format(seed) +/+ "snd%.wav".format(i.asString.padLeft(3,"0")),
-		{"DONE: %".format(i).postln; done = true})
+		"random_%".format(seed) +/+ "snd%.wav".format((i+1).asString.padLeft(3,"0")),
+		{"DONE: %".format(i+1).postln; done = true})
 };
 
 {
