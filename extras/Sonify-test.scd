@@ -63,7 +63,7 @@ o.free;
 // synthétiser des formules aléatoires
 (
 // racine de génération aléatoire
-var seed = 667;
+var seed = 911;
 // paramètres
 var times = ((2..5) ! 15).reduce('++').asBag;
 var mfuncs = Sonify_Func.orderedArray((Sonify_Func.funcDefs['mass'].keys.asArray ! 3).reduce('++'));

@@ -15,7 +15,7 @@ Sonify_Time : Sonify_Element {
 	}
 
 	*randGen {|time|
-		^this.new({(rand(20.0)**2)*0.01} ! time);
+		^this.new({((rand(20.0)**2)*0.01).round(0.001).max(0.002)} ! time);
 	}
 
 	setParent {|par|

@@ -59,7 +59,9 @@ Sonify_Formula : Sonify_Element {
 			var tl, mfl, hfl, ncl, ml;
 			// partager les éléments
 			// temps
-			numl = rand(times.size-1) + 1;
+			// numl = rand(times.size-1) + 1;
+			numl = (times.size / 2).floor.asInteger
+			+ ((times.size % 2) * 0.5.coin.asInteger);
 			numr = times.size - numl;
 			tl = Bag(numl);
 			numl.do {
@@ -72,7 +74,10 @@ Sonify_Formula : Sonify_Element {
 				var res;
 				var nmax = min(numl, ord.size);
 				var nmin = max(ord.size-numr, 0);
-				n = rand(nmax-nmin+1) + nmin;
+				// n = rand(nmax-nmin+1) + nmin;
+				n = ((nmax-nmin) / 2).floor.asInteger
+				+ (((nmax-nmin) % 2) * 0.5.coin.asInteger)
+				+ nmin;
 				res = Bag(n);
 				n.do {
 					var tmp = ord.choose;
@@ -82,7 +87,9 @@ Sonify_Formula : Sonify_Element {
 				res;
 			};
 			// fonctions de timbre
-			n = rand(hfuncs.size+1);
+			// n = rand(hfuncs.size+1);
+			n = (hfuncs.size / 2).floor.asInteger
+			+ ((hfuncs.size % 2) * 0.5.coin.asInteger);
 			hfl = Bag(n);
 			n.do {
 				var tmp = hfuncs.choose;
@@ -90,10 +97,14 @@ Sonify_Formula : Sonify_Element {
 				hfuncs.remove(tmp);
 			};
 			// nombre de couleurs
-			ncl = rand(ncol+1);
+			// ncl = rand(ncol+1);
+			ncl = (ncol / 2).floor.asInteger
+			+ ((ncol % 2) * 0.5.coin.asInteger);
 			ncol = ncol - ncl;
-			n = rand(mods.size+1);
 			// modulateurs
+			n = rand(mods.size+1);
+			n = (mods.size / 2).floor.asInteger
+			+ ((mods.size % 2) * 0.5.coin.asInteger);
 			ml = Bag(n);
 			n.do {
 				var tmp = mods.choose;

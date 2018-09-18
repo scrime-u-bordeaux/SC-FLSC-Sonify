@@ -12,9 +12,9 @@ Sonify_Dyn : Sonify_Parm {
 		^this.new(
 			// [-1] ++ ({rand(2.0)-1}!(time-1)) ++ [-1],
 			[-1] ++
-			({rand(2.0)-1}!mid) ++
+			({(rand(2.0)-1).round(0.001)}!mid) ++
 			[1] ++
-			({rand(2.0)-1}!(time-mid-2)) ++
+			({(rand(2.0)-1).round(0.001)}!(time-mid-2)) ++
 			[-1],
 			mods.collect {|mod|
 				Sonify_Func.randGen(time, 'mod', mod, [])
