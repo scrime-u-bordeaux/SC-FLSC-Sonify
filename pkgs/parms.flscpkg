@@ -31,15 +31,17 @@
                                        (m* baseval
                                          (m** 2
                                            (m* oct
-                                             (apply mn+
-                                               (append
-                                                 (if (? (car parm))
-                                                     (if (number? (car parm))
-                                                         (car parm)
-                                                         (env dates (car parm)))
-                                                     0)
-                                                 (map (lambda (mod) (apply modexp (append [dates] mod)))
-                                                   (cdr parm))))))))))
+                                             (m/
+                                               (apply mn+
+                                                 (append
+                                                   (if (? (car parm))
+                                                       (if (number? (car parm))
+                                                           (car parm)
+                                                           (env dates (car parm)))
+                                                       0)
+                                                   (map (lambda (mod) (apply modexp (append [dates] mod)))
+                                                     (cdr parm))))
+                                               (++ (length (cdr parm))))))))))
                      [parmlin parmexp])))
 
 ;;; recuperation des fonctions primitives parametre
