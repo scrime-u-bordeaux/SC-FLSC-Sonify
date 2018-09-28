@@ -63,8 +63,7 @@ o.free;
 // synthétiser des formules aléatoires
 (
 // racine de génération aléatoire
-// var seeds = [6, 13, 42, 27, 51, 421, 667, 1111];
-var seeds = [669, 1111];
+var seeds = [6, 13, 42, 27, 51, 421, 667, 1111];
 // paramètres
 var times, mfuncs, hfuncs, ncol, mods;
 // var times = ((2..5) ! 15).reduce('++').asBag;
@@ -75,6 +74,7 @@ var times, mfuncs, hfuncs, ncol, mods;
 // variables utilisées
 var formulas, outFile, server = Sonify_Server();
 var job, size, done = true;
+var home = Platform.userExtensionDir +/+ "SC-FLSC-Sonify";
 
 {
 	seeds.do {|seed|
@@ -92,17 +92,19 @@ var job, size, done = true;
 		size = formulas.size;
 
 		// écrire les formules dans un fichier
-		outFile = File.open(Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "src" +/+
+		File.mkdir(home +/+ "src");
+		outFile = File.open(home +/+ "src" +/+
 			"random_%.txt".format(seed), "w");
 		formulas.do {|f| outFile.write("%\n".format(f))};
 		outFile.close;
 
 		// synthétiser les formules
+		// File.mkdir(home +/+ "recordings");
 		job = {|i|
 			done = false;
 			server.job(formulas[i],
-				Platform.userExtensionDir +/+ "SC-FLSC-Sonify" +/+ "recordings" +/+
-				"random_%".format(seed) +/+ "snd%.wav".format((i+1).asString.padLeft(3,"0")),
+				home +/+ "recordings" +/+ "random_%".format(seed) +/+
+				"snd%.wav".format((i+1).asString.padLeft(3,"0")),
 				{"DONE: %".format(i+1).postln; done = true})
 		};
 

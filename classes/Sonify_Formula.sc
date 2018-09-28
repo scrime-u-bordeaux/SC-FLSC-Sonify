@@ -123,7 +123,7 @@ Sonify_Formula : Sonify_Element {
 			var time = times.choose;
 			var massfuncs = mfuncs.reduce('++');
 			// partager les modulateurs
-			var probs = [1, 1, massfuncs.size, hfuncs.size, ncol];
+			var probs = [1, 1, massfuncs.size, hfuncs.size, ncol].normalizeSum;
 			var modspl = {List()} ! 5;
 			mods.do {|mod| modspl[probs.windex].add(mod)};
 			^[Sonify_Formula(

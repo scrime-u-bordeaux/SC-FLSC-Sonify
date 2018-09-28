@@ -16,7 +16,7 @@
 (define (red (let ((mmass (module (delta i) (+ (ceil (/ i 2)) (* (/ delta 2) (** -1 (mod i 2))))))
                    (mauxmass (module (i) (ceil (/ i 2)))))
                (lambda (dates delta)
-                 (let ((delta (gain dates delta)))
+                 (let ((!delta (gain dates delta)))
                    (lambda (numfunc mass auxmass caldyn)
                      [(lambda (n) (* 2 (numfunc n)))
                       (lambda (i) (mmass delta (mass i)))
@@ -25,7 +25,7 @@
 ;;; brt: bruitage
         (brt (let ((mmass (module (delta i) (+ i (* delta (rand 1 -1))))))
                (lambda (dates delta)
-                 (let ((delta (gain dates delta)))
+                 (let ((!delta (gain dates delta)))
                    (lambda (numfunc mass auxmass caldyn)
                      [numfunc
                       (lambda (i) (mmass delta (mass i)))
@@ -38,7 +38,7 @@
                      (mmass2 (module (smax i) (delta smax i)))
                      (mcaldyn (module (scur smax i) (clip (- (++ scur) (order smax i)) 0 1))))
                 (lambda (dates smax scur)
-                  (let ((scur (parmlin dates smax scur)))
+                  (let ((!scur (parmlin dates smax scur)))
                     (lambda (numfunc mass auxmass caldyn)
                       [(lambda (n) (++ (* (** 2 smax) (-- n))))
                        (lambda (i) (m+ (mass (mmass1 smax i)) (mmass2 smax i)))
@@ -50,7 +50,7 @@
 ;;; cald: calibre dynamique
         (cald (let ((mcald (module (x i) (clip (- 25 x i) 0 1))))
                 (lambda (dates x)
-                  (let ((x (parmlin dates 24 x)))
+                  (let ((!x (parmlin dates 24 x)))
                     (lambda (numfunc mass auxmass caldyn)
                       [numfunc
                        mass
@@ -62,7 +62,7 @@
                         (mcal (module (beta delta i) (prox delta (** i (// (++ beta)))))))
                     (lambda (dates beta delta)
                       (let ((!beta (parmlin dates 2 beta))
-                            (delta (parmlin dates 10 delta)))
+                            (!delta (parmlin dates 10 delta)))
                         (lambda (numfunc mass auxmass caldyn)
                           [numfunc
                            (lambda (i) (mmass beta (mass i)))
@@ -79,7 +79,7 @@
 ;;; distexp: distorsion exponentielle
         (distexp (let ((mmass (module (beta i) (* i (** 2 (* beta i))))))
                    (lambda (dates beta)
-                     (let ((beta (parmlin dates 0.04 beta)))
+                     (let ((!beta (parmlin dates 0.04 beta)))
                        (lambda (numfunc mass auxmass caldyn)
                          [numfunc
                           (lambda (i) (mmass beta (mass i)))
@@ -88,10 +88,9 @@
 ;;; decl: decalage
         (decl (let ((mmass (module (delta i) (- i delta))))
                 (lambda (dates delta)
-                  (let ((delta (gain dates delta)))
+                  (let ((!delta (gain dates delta)))
                     (lambda (numfunc mass auxmass caldyn)
                       [numfunc
                        (lambda (i) (mmass delta (mass i)))
                        auxmass
                        caldyn]))))))
-
